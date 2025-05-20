@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { useState, useRef } from "react"
 import { Card, CardContent } from "../main _ui/card"
 import { Button } from "../main _ui/button"
@@ -9,23 +6,13 @@ import { Progress } from "../main _ui/progress"
 import { Upload, FileText, Search, ArrowLeft, CheckCircle, AlertCircle, Briefcase } from "lucide-react"
 import { Badge } from "../main _ui/badge"
 import { Skeleton } from "../main _ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../main _ui/tabs"
-
-interface Job {
-  title: string
-  company: string
-  location: string
-  salary: string
-  experience: string
-  skills: string[]
-  match?: number
-}
+import { getRandomJobs } from "@/data/jobs"
 
 const ResumeUploadForm = () => {
   const [file, setFile] = useState<File | null>(null)
   const [step, setStep] = useState<"upload" | "analyzing" | "score" | "jobs">("upload")
   const [score, setScore] = useState<number | null>(null)
-  const [jobs, setJobs] = useState<Job[]>([])
+  const [jobs, setJobs] = useState<any[]>([])
   const [analysisProgress, setAnalysisProgress] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -79,73 +66,9 @@ const ResumeUploadForm = () => {
     setJobs([])
 
     setTimeout(() => {
-      const mockJobs: Job[] = [
-        {
-          title: "Frontend Developer",
-          company: "Google",
-          location: "Bangalore, India",
-          salary: "₹12-18 LPA",
-          experience: "2-4 years",
-          skills: ["React", "TypeScript", "HTML", "CSS"],
-          match: 92,
-        },
-        {
-          title: "Backend Engineer",
-          company: "Amazon",
-          location: "Hyderabad, India",
-          salary: "₹15-20 LPA",
-          experience: "3+ years",
-          skills: ["Node.js", "Express", "MongoDB"],
-          match: 85,
-        },
-        {
-          title: "Full Stack Developer",
-          company: "Flipkart",
-          location: "Remote",
-          salary: "₹10-14 LPA",
-          experience: "2+ years",
-          skills: ["React", "Node.js", "PostgreSQL"],
-          match: 78,
-        },
-        {
-          title: "Software Engineer",
-          company: "Microsoft",
-          location: "Noida, India",
-          salary: "₹14-22 LPA",
-          experience: "3-5 years",
-          skills: [".NET", "C#", "Azure"],
-          match: 72,
-        },
-        {
-          title: "AI Engineer",
-          company: "TCS",
-          location: "Pune, India",
-          salary: "₹8-12 LPA",
-          experience: "1-3 years",
-          skills: ["Python", "TensorFlow", "NLP"],
-          match: 68,
-        },
-        {
-          title: "DevOps Engineer",
-          company: "Infosys",
-          location: "Chennai, India",
-          salary: "₹10-16 LPA",
-          experience: "2-4 years",
-          skills: ["Docker", "Kubernetes", "AWS"],
-          match: 65,
-        },
-        {
-          title: "QA Analyst",
-          company: "Cognizant",
-          location: "Kolkata, India",
-          salary: "₹6-10 LPA",
-          experience: "1-2 years",
-          skills: ["Selenium", "JIRA", "Postman"],
-          match: 60,
-        },
-      ]
-
-      setJobs(mockJobs)
+      // Get 7 random jobs from our data
+      const randomJobs = getRandomJobs(7)
+      setJobs(randomJobs)
     }, 2000)
   }
 
@@ -203,7 +126,7 @@ const ResumeUploadForm = () => {
     ]
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-8">
         {details.map((detail, index) => (
           <div key={index} className="bg-blue-50 p-4 rounded-lg flex items-center">
             <div className="mr-3">{detail.icon}</div>
@@ -221,11 +144,11 @@ const ResumeUploadForm = () => {
     <Card className="shadow-lg border-blue-100 overflow-hidden">
       <CardContent className="p-0">
         {step === "upload" && (
-          <div className="p-6 md:p-8">
+          <div className="p-4 sm:p-6 md:p-8">
             <div
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
-              className="border-2 border-dashed border-blue-200 rounded-lg p-6 md:p-10 text-center cursor-pointer hover:border-blue-500 transition-colors bg-blue-50/50"
+              className="border-2 border-dashed border-blue-200 rounded-lg p-4 sm:p-6 md:p-8 lg:p-10 text-center cursor-pointer hover:border-blue-500 transition-colors bg-blue-50/50"
               onClick={triggerFileInput}
             >
               <input
@@ -236,17 +159,17 @@ const ResumeUploadForm = () => {
                 className="hidden"
               />
               <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Upload className="h-10 w-10 text-blue-600" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Upload className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="text-xl md:text-2xl font-semibold text-blue-900">Upload Your Resume</h3>
+                  <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-blue-900">Upload Your Resume</h3>
                   <p className="text-gray-600 mt-2">Drag and drop your resume here, or click to select</p>
                   <p className="text-sm text-gray-500 mt-1">Supported formats: PDF, DOC, DOCX</p>
                 </div>
                 <Button
-                  className="mt-4 bg-blue-900 hover:bg-blue-800"
-                  size="lg"
+                  className="w-full sm:w-auto mt-4 bg-blue-900 hover:bg-blue-800"
+                  size="default"
                   onClick={(e) => {
                     e.stopPropagation()
                     triggerFileInput()
@@ -278,9 +201,11 @@ const ResumeUploadForm = () => {
         )}
 
         {step === "analyzing" && (
-          <div className="p-8 md:p-10">
+          <div className="p-4 sm:p-6 md:p-8 lg:p-10">
             <div className="text-center mb-8">
-              <h2 className="text-xl md:text-2xl font-semibold text-blue-900 mb-2">Analyzing your resume...</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-blue-900 mb-2">
+                Analyzing your resume...
+              </h2>
               <p className="text-gray-600">This will only take a moment</p>
             </div>
 
@@ -322,14 +247,14 @@ const ResumeUploadForm = () => {
         )}
 
         {step === "score" && score !== null && (
-          <div className="p-6 md:p-8">
+          <div className="p-4 sm:p-6 md:p-8">
             <div className="text-center mb-6">
-              <h2 className="text-xl md:text-2xl font-bold text-blue-900 mb-2">ATS Resume Score</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-900 mb-2">ATS Resume Score</h2>
               <p className="text-gray-600 text-sm">Based on industry standards and keyword optimization</p>
             </div>
 
             <div className="flex justify-center mb-8">
-              <div className="relative w-40 h-40 flex items-center justify-center">
+              <div className="relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 flex items-center justify-center">
                 <svg className="w-full h-full" viewBox="0 0 100 100">
                   <circle
                     className="text-gray-200"
@@ -355,7 +280,7 @@ const ResumeUploadForm = () => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className={`text-4xl font-bold ${getScoreColor(score)}`}>{score}%</span>
+                  <span className={`text-3xl sm:text-4xl font-bold ${getScoreColor(score)}`}>{score}%</span>
                   <span className="text-xs text-gray-500 mt-1">ATS Score</span>
                 </div>
               </div>
@@ -368,21 +293,25 @@ const ResumeUploadForm = () => {
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start">
                   <CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5" />
-                  <span>Good use of industry-specific keywords</span>
+                  <span>Good use of Python-related keywords and frameworks</span>
                 </li>
                 <li className="flex items-start">
                   <AlertCircle className="h-4 w-4 text-yellow-500 mr-2 mt-0.5" />
-                  <span>Consider adding more quantifiable achievements</span>
+                  <span>Consider adding more quantifiable achievements with your Python projects</span>
                 </li>
                 <li className="flex items-start">
                   <AlertCircle className="h-4 w-4 text-yellow-500 mr-2 mt-0.5" />
-                  <span>Improve formatting for better readability</span>
+                  <span>Add more details about your experience with AWS and cloud technologies</span>
                 </li>
               </ul>
             </div>
 
             <div className="flex justify-center">
-              <Button onClick={handleJobSearch} size="lg" className="bg-blue-900 hover:bg-blue-800">
+              <Button
+                onClick={handleJobSearch}
+                size="default"
+                className="w-full sm:w-auto bg-blue-900 hover:bg-blue-800"
+              >
                 <Search className="mr-2 h-4 w-4" /> Find Matching Jobs
               </Button>
             </div>
@@ -391,111 +320,86 @@ const ResumeUploadForm = () => {
 
         {step === "jobs" && (
           <div>
-            <div className="p-4 md:p-6 border-b border-blue-100 bg-blue-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="p-4 sm:p-6 md:p-8 border-b border-blue-100 bg-blue-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h2 className="text-xl font-bold text-blue-900">Recommended Jobs</h2>
-                <p className="text-sm text-gray-600">Based on your resume score and skills</p>
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-900">Recommended Jobs</h2>
+                <p className="text-sm text-gray-600">Based on your Python Developer resume</p>
               </div>
               <Button variant="outline" size="sm" onClick={handleBackToScore} className="text-blue-700">
                 <ArrowLeft className="mr-1 h-4 w-4" /> Back to Score
               </Button>
             </div>
 
-            <div className="p-4 md:p-6">
-              <Tabs defaultValue="recommended" className="w-full">
-                <TabsList className="mb-4 w-full sm:w-auto">
-                  <TabsTrigger value="recommended" className="flex-1 sm:flex-initial">
-                    Recommended
-                  </TabsTrigger>
-                  <TabsTrigger value="recent" className="flex-1 sm:flex-initial">
-                    Recent Jobs
-                  </TabsTrigger>
-                  <TabsTrigger value="remote" className="flex-1 sm:flex-initial">
-                    Remote
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="recommended" className="mt-0">
-                  <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
-                    {jobs.length === 0
-                      ? Array(4)
-                          .fill(0)
-                          .map((_, i) => (
-                            <div key={i} className="border rounded-lg p-4">
-                              <Skeleton className="h-6 w-3/4 mb-2" />
-                              <Skeleton className="h-4 w-1/2 mb-2" />
-                              <Skeleton className="h-4 w-2/3 mb-2" />
-                              <div className="flex gap-2 mt-3">
-                                {Array(3)
-                                  .fill(0)
-                                  .map((_, j) => (
-                                    <Skeleton key={j} className="h-5 w-16 rounded-full" />
-                                  ))}
-                              </div>
-                            </div>
-                          ))
-                      : jobs.map((job, index) => (
-                          <div
-                            key={index}
-                            className="border border-blue-100 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
-                          >
-                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <h3 className="text-lg font-semibold text-blue-900">{job.title}</h3>
-                                  {job.match && (
-                                    <Badge className={getMatchBadgeColor(job.match)}>{job.match}% Match</Badge>
-                                  )}
-                                </div>
-                                <p className="text-gray-700 flex items-center gap-1">
-                                  <Briefcase className="h-3 w-3" /> {job.company}
-                                </p>
-                              </div>
-                              <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 self-start">
-                                {job.salary}
-                              </Badge>
-                            </div>
-
-                            <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-gray-600">
-                              <span>{job.location}</span>
-                              <span className="text-gray-300">•</span>
-                              <span>{job.experience}</span>
-                            </div>
-
-                            <div className="mt-3 flex flex-wrap gap-2">
-                              {job.skills.map((skill, i) => (
-                                <Badge
-                                  key={i}
-                                  variant="outline"
-                                  className="bg-slate-50 text-slate-700 border-slate-200"
-                                >
-                                  {skill}
-                                </Badge>
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
+                {jobs.length === 0
+                  ? Array(4)
+                      .fill(0)
+                      .map((_, i) => (
+                        <div key={i} className="border rounded-lg p-4">
+                          <Skeleton className="h-6 w-3/4 mb-2" />
+                          <Skeleton className="h-4 w-1/2 mb-2" />
+                          <Skeleton className="h-4 w-2/3 mb-2" />
+                          <div className="flex gap-2 mt-3">
+                            {Array(3)
+                              .fill(0)
+                              .map((_, j) => (
+                                <Skeleton key={j} className="h-5 w-16 rounded-full" />
                               ))}
-                            </div>
-
-                            <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end">
-                              <Button variant="outline" size="sm" className="text-blue-700">
-                                Apply Now
-                              </Button>
-                            </div>
                           </div>
-                        ))}
-                  </div>
-                </TabsContent>
+                        </div>
+                      ))
+                  : jobs.map((job, index) => (
+                      <div
+                        key={index}
+                        className="border border-blue-100 rounded-lg p-4 bg-white hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-semibold text-blue-900">{job.title}</h3>
+                              {job.match && (
+                                <Badge className={`${getMatchBadgeColor(job.match)} mt-1 sm:mt-0`}>
+                                  {job.match}% Match
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-gray-700 flex items-center gap-1">
+                              <Briefcase className="h-3 w-3" /> {job.company}
+                            </p>
+                          </div>
+                          <Badge className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 self-start">
+                            {job.salary}
+                          </Badge>
+                        </div>
 
-                <TabsContent value="recent" className="mt-0">
-                  <div className="bg-blue-50 rounded-lg p-6 text-center">
-                    <p className="text-gray-600">Select "Recommended" to view jobs matching your profile</p>
-                  </div>
-                </TabsContent>
+                        <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-gray-600">
+                          <span>{job.location}</span>
+                          <span className="text-gray-300">•</span>
+                          <span>{job.experience}</span>
+                        </div>
 
-                <TabsContent value="remote" className="mt-0">
-                  <div className="bg-blue-50 rounded-lg p-6 text-center">
-                    <p className="text-gray-600">Select "Recommended" to view jobs matching your profile</p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {job.skills.slice(0, 5).map((skill: string, i: number) => (
+                            <Badge key={i} variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                              {skill}
+                            </Badge>
+                          ))}
+                          {job.skills.length > 5 && (
+                            <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200">
+                              +{job.skills.length - 5} more
+                            </Badge>
+                          )}
+                        </div>
+
+                        <div className="mt-4 pt-3 border-t border-gray-100 flex justify-end">
+                          <Button variant="outline" size="sm" className="text-blue-700 w-full sm:w-auto">
+                            Apply Now
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+              </div>
             </div>
           </div>
         )}
